@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>spooktober</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+    }
+
+    body {
+      background-color: pink;
+    }
+
+    img {
+      position: absolute;
+      width: 150px;
+      height: 150px;
+    }
+
+    h1, h6 {
+      text-align: center;
+      cursor: default;
+    }
+  </style>
+</head>
+<body>
+  <h1>
+    spooktober
+  </h1>
+  <h6>
+    github.com/danfragoso/spooky
+  </h6>
+  <script>
+    const body = document.querySelector("body")
+    const context = new AudioContext() || new webkitAudioContext();
+    let dootDootBuffer = {};
+
+    const handleClick = ev => {
+      const img = document.createElement("img");
+      
+      img.src = "dd.gif"
+      img.style.top = ev.clientY - 75 + 'px';
+      img.style.left = ev.clientX - 75 + 'px';
+      
+      body.appendChild(img)
+
+      const bufferSource = context.createBufferSource();
+      bufferSource.connect(context.destination);
+      bufferSource.buffer = dootDootBuffer;
+      bufferSource.start();
+    }
+
+    window.addEventListener("click", handleClick)
+    window.addEventListener("touch", handleClick)
+
+    window.onload = () => {
+      const request = new XMLHttpRequest();
+
+      request.open("GET", "dd.mp3", true);
+      request.responseType = "arraybuffer";
+      request.onload = () => {
+        context.decodeAudioData(request.response, onDecoded);
+      }
+
+      function onDecoded(buffer) {
+        dootDootBuffer = buffer;
+
+      }
+
+      request.send();
+    };
+  </script>
+</body>
+</html>
